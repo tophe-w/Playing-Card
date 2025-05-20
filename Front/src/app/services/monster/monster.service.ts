@@ -23,9 +23,8 @@ export class MonsterService {
       this.monsters = JSON.parse(monsterData).map((monsterJSON: any) =>
         Object.assign(new Monster(), monsterJSON)
       );
-      this.currentIndex = Math.max(
-        ...this.monsters.map((monster) => monster.id)
-      );
+      this.currentIndex =
+        Math.max(...this.monsters.map((monster) => monster.id), 0) + 1;
     } else {
       this.init();
       this.save();
@@ -121,12 +120,24 @@ export class MonsterService {
   }
 
   delete(id: number) {
+    console.log('ID to delete:', id);
+    console.log(
+      'IDs in array:',
+      this.monsters.map((m) => m.id)
+    );
+
     const monsterIndex = this.monsters.findIndex(
       (originalMonster) => originalMonster.id === id
     );
+
+    console.log('Index trouvé :', monsterIndex);
+
     if (monsterIndex != -1) {
       this.monsters.splice(monsterIndex, 1);
       this.save();
+      console.log('Monstre supprimé, nouveau tableau :', this.monsters);
+    } else {
+      console.warn('Monstre non trouvé dans la liste !');
     }
   }
 }
